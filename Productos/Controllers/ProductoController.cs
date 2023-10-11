@@ -4,90 +4,64 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Productos.Models;
+using Productos.Util;
 
 namespace Productos.Controllers
 {
     public class ProductoController : Controller
     {
         // GET: Producto
-        public ActionResult Index()
+        public IActionResult Index()
         {
-            return View();
+            return View(Util.Utils.ListaProducto);
         }
 
         // GET: Producto/Details/5
-        public ActionResult Details(int id)
+        public IActionResult Details(int id)
         {
             return View();
         }
 
         // GET: Producto/Create
-        public ActionResult Create()
+        public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Producto/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public IActionResult Create(Producto producto)
         {
-            try
-            {
-                // TODO: Add insert logic here
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            int id = Util.Utils.ListaProducto.Count()+1;
+            producto.IdProducto = id;
+            Util.Utils.ListaProducto.Add(producto);
+            return RedirectToAction("Index");
         }
 
         // GET: Producto/Edit/5
-        public ActionResult Edit(int id)
+        public IActionResult Edit(int idProducto)
         {
-            return View();
-        }
-
-        // POST: Producto/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
+            Producto producto = Utils.ListaProducto.Find(x => x.IdProducto == idProducto);
+            if (producto != null)
             {
-                // TODO: Add update logic here
-
-                return RedirectToAction(nameof(Index));
+                return View("Producto");
             }
-            catch
-            {
-                return View();
-            }
+            return RedirectToAction("Index");
         }
 
         // GET: Producto/Delete/5
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int idProducto)
         {
-            return View();
+
+            Producto producto = Utils.ListaProducto.Find(x => x.IdProducto == idProducto);
+            if (producto != null)
+            {
+                Utils.ListaProducto.Remove(producto);
+            }
+            return RedirectToAction("Index");
         }
 
-        // POST: Producto/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+      
     }
 }
